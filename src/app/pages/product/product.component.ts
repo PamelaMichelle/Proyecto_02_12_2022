@@ -1,96 +1,69 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
+import { HttpClient } from '@angular/common/http'
+import { ProductModel } from 'src/app/Modules/product.modul';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css'],
+  styleUrls: ['./product.component.css']
 })
-//ngoninit se ejecuta luego del constructor
 export class ProductComponent implements OnInit {
-  //httpclient es una clase hacer las peticiones
-  constructor(private httpClient: HttpClient) {
-    this.httpClient.get('https://api.escuelajs.co/api/v1/products');
 
-  }//Inyeccion de dependencia
+  constructor(private httpClient: HttpClient) {
+  }
 
   ngOnInit(): void {
+    //this.getProducts();
     //this.getProduct();
-    // this.getProducts();
     //this.updateProduct();
     //this.deleteProduct();
-    this.createProduct();
-    
+    //this.createProduct()
   }
-  getProducts() {
-    this.httpClient
-      .get('https://api.escuelajs.co/api/v1/products')
-      .subscribe((response) => {
-        console.log(response);
 
-      });
+  getProducts() {
+    const url = 'http://api.escuelajs.co/api/v1/products';
+    this.httpClient.get(url).subscribe(response => { console.log(response); });
   }
-//subscribe lista de espera va llegar la respuesta
-//Observable trae la informacion
+
   getProduct() {
-    this.httpClient
-    .get('https://api.escuelajs.co/api/v1/products/203')
-    .subscribe((response) => {
-      console.log(response)
-      });
+    const url = 'http://api.escuelajs.co/api/v1/products/8';
+    this.httpClient.get(url).subscribe((response) => { console.log(response); });
   }
+
+  
   createProduct() {
-    const url = 'https://api.escuelajs.co/api/v1/products';
     const data = {
-      id: 1,
-      title: 'Esfero',
-      price: 15,
-      description: 'Utiles escolares',
-      category: 1,
-      image: ['https://api.lorem.space/image/shoes?w=640&h=480&r=1302'],
+      title: 'Escuela JS',
+      price: 100,
+      description: 'Escuela de JavaScript',
+      category: 2,
+      images: ['https://escuelajs.co/static/images/logo.png', 'https://escuelajs.co/static/images/logo.png']
     };
-    this.httpClient.post(url, data).subscribe(response => {
-      console.log(response)
+    const url = 'http://api.escuelajs.co/api/v1/products/12';
+    this.httpClient.post(url, data).subscribe((response) => {
+      console.log(response);
     });
   }
 
   updateProduct() {
     const data = {
-      id: 1,
-      title: 'Esfero',
-      price: 15,
-      description: 'Utiles escolares',
-      category: 1,
-      image: ['https://api.lorem.space/image/shoes?w=640&h=480&r=1302'],
+      title: 'Escuela JS Kevin Rivera',
+      price: 100,
+      description: 'Kevin Rivera',
+      category: 2,
+      images: ['https://escuelajs.co/static/images/logo.png']
     };
-    const url = 'https://api.escuelajs.co/api/v1/products/9';
-    this.httpClient.put(url, data).subscribe(
-      response => {
-        console.log(response);
-
-
+    const url = 'http://api.escuelajs.co/api/v1/products/2';
+    this.httpClient.put(url, data).subscribe((response) => {
+      console.log(response);
     });
-
   }
 
-  getCategory() {
-    const response = this.httpClient.get(
-      'https://api.escuelajs.co/api/v1/products'
-    );
-    console.log(response);
-
+  deleteProduct() {
+    const url = 'http://api.escuelajs.co/api/v1/products/6';
+    this.httpClient.delete(url).subscribe((response) => {
+      console.log(response);
+    });
   }
 
-
-  deleteProduct(){
-    const url = 'https://api.escuelajs.co/api/v1/products/202';
-    this.httpClient.delete(url).subscribe(
-      response => {
-        console.log(response)
-
-    }
-    );
-
-  }
 
 }
