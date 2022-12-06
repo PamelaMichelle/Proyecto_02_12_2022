@@ -1,69 +1,79 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
-import { ProductModel } from 'src/app/Modules/product.modul';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  styleUrls: ['./product.component.css'],
 })
+//ngoninit se ejecuta luego del constructor
 export class ProductComponent implements OnInit {
-
-  constructor(private httpClient: HttpClient) {
-  }
+  //httpclient es una clase hacer las peticiones
+  constructor(private httpClient: HttpClient) {}//Inyeccion de dependencia
 
   ngOnInit(): void {
-    //this.getProducts();
     //this.getProduct();
+    //this.getProducts();
+    this.createProduct();
     //this.updateProduct();
     //this.deleteProduct();
-    //this.createProduct()
   }
-
   getProducts() {
-    const url = 'http://api.escuelajs.co/api/v1/products';
-    this.httpClient.get(url).subscribe(response => { console.log(response); });
+   this.httpClient
+      .get('https://api.escuelajs.co/api/v1/products').subscribe(
+        response => {                    //funcion flecha o landa
+        console.log(response);
+      });
   }
-
+//subscribe lista de espera va llegar la respuesta
+//Observable trae la informacion
   getProduct() {
-    const url = 'http://api.escuelajs.co/api/v1/products/8';
-    this.httpClient.get(url).subscribe((response) => { console.log(response); });
+    this.httpClient
+      .get('https://api.escuelajs.co/api/v1/products/24')
+      .subscribe(response => {
+        console.log(response);
+      });
   }
-
-  
   createProduct() {
     const data = {
-      title: 'Escuela JS',
-      price: 100,
-      description: 'Escuela de JavaScript',
-      category: 2,
-      images: ['https://escuelajs.co/static/images/logo.png', 'https://escuelajs.co/static/images/logo.png']
+      title:'esfero Pamela Guananga',
+      price: 45,
+      description: 'utiles escolares',
+      category: 1,
+      images: ['https://api.lorem.space/image/shoes?w=640&h=480&r=8318'],
     };
-    const url = 'http://api.escuelajs.co/api/v1/products/12';
-    this.httpClient.post(url, data).subscribe((response) => {
+    const url = 'https://api.escuelajs.co/api/v1/products';
+    this.httpClient.post(url, data).subscribe(
+      response => {
       console.log(response);
     });
   }
 
   updateProduct() {
     const data = {
-      title: 'Escuela JS Kevin Rivera',
-      price: 100,
-      description: 'Kevin Rivera',
+      title: 'lapiz',
+      price: 60,
+      description: 'calzado-Pamela Guananga',
       category: 2,
-      images: ['https://escuelajs.co/static/images/logo.png']
+      images: ['https://api.lorem.space/image/shoes?w=640&h=480&r=8318'],
     };
-    const url = 'http://api.escuelajs.co/api/v1/products/2';
-    this.httpClient.put(url, data).subscribe((response) => {
+    const url = 'https://api.escuelajs.co/api/v1/products/24';
+
+    this.httpClient.put(url, data).subscribe(
+      response => {
       console.log(response);
     });
-  }
 
-  deleteProduct() {
-    const url = 'http://api.escuelajs.co/api/v1/products/6';
-    this.httpClient.delete(url).subscribe((response) => {
+  }
+  deleteProduct(){
+    const url = 'https://api.escuelajs.co/api/v1/products/24';
+
+    this.httpClient.delete(url).subscribe(
+      response => {
       console.log(response);
-    });
-  }
+    }
+    );
 
+  }
 
 }
