@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ProductModel, UpdateProductDto } from 'src/app/modules/product.modul';
+import { ProductHttpService } from 'src/app/services/product-http.service';
 
 @Component({
   selector: 'app-product',
@@ -8,72 +9,73 @@ import { HttpClient } from '@angular/common/http';
 })
 //ngoninit se ejecuta luego del constructor
 export class ProductComponent implements OnInit {
-  //httpclient es una clase hacer las peticiones
-  constructor(private httpClient: HttpClient) {}//Inyeccion de dependencia
+  products:ProductModel[] = [];
+  selectProduct:UpdateProductDto={title:"",price:3,description:""};
 
+  //httpclient es una clase hacer las peticiones
+  constructor(private productHttpService: ProductHttpService) {
+    this.initProduct();
+  } //Inyeccion de dependencia
+
+  initProduct(){
+    this.selectProduct = {title:"",price:0,description:""};
+  }
   ngOnInit(): void {
     //this.getProduct();
-    //this.getProducts();
-    this.createProduct();
+    this.getProducts();
+    //this.createProduct();
     //this.updateProduct();
     //this.deleteProduct();
   }
+  //getAll me devuelve un observable
   getProducts() {
-   this.httpClient
-      .get('https://api.escuelajs.co/api/v1/products').subscribe(
-        response => {                    //funcion flecha o landa
-        console.log(response);
-      });
+    return this.productHttpService.getAll().subscribe((response) => {
+      this.products = response;
+      //console.log(response);
+    });
   }
-//subscribe lista de espera va llegar la respuesta
-//Observable trae la informacion
+  //subscribe lista de espera va llegar la respuesta
+  //Observable trae la informacion
+
   getProduct() {
-    this.httpClient
-      .get('https://api.escuelajs.co/api/v1/products/24')
-      .subscribe(response => {
-        console.log(response);
-      });
+    return this.productHttpService.getOne(6).subscribe((response) => {
+      console.log(response);
+    });
   }
   createProduct() {
-    const data = {
-      title:'esfero Pamela Guananga',
-      price: 45,
-      description: 'utiles escolares',
-      category: 1,
-      images: ['https://api.lorem.space/image/shoes?w=640&h=480&r=8318'],
-    };
-    const url = 'https://api.escuelajs.co/api/v1/products';
-    this.httpClient.post(url, data).subscribe(
-      response => {
+    const data ={
+      id: 2,
+      title: "zapato",
+      description:"zapato grande",
+      price: 23,
+      categoryId:2,
+      images:["https://api.lorem.space/image/fashion?w=640&h=480&r=3268"]
+
+    }
+    return this.productHttpService.store(data).subscribe((response) => {
       console.log(response);
     });
   }
 
   updateProduct() {
-    const data = {
-      title: 'lapiz',
-      price: 60,
-      description: 'calzado-Pamela Guananga',
-      category: 2,
-      images: ['https://api.lorem.space/image/shoes?w=640&h=480&r=8318'],
-    };
-    const url = 'https://api.escuelajs.co/api/v1/products/24';
-
-    this.httpClient.put(url, data).subscribe(
-      response => {
+    const data ={
+      id: 2,
+      title: "zapato",
+      description:"zapato grande",
+    }
+    return this.productHttpService.update(1, data).subscribe((response) => {
       console.log(response);
     });
-
   }
-  deleteProduct(){
-    const url = 'https://api.escuelajs.co/api/v1/products/24';
-
-    this.httpClient.delete(url).subscribe(
-      response => {
-      console.log(response);
-    }
-    );
-
-  }
-
+  editproduct(product:ProductModel){
+    this.selectProduct = product;
+  }
+  deleteProduct(id:ProductModel['id']) {
+    return this.productHttpService.destroy(id).subscribe((response) => {
+      this.products = this.products.filter(product => product.id != id);
+      //console.log(response);
+    });
+  }
 }
+//del component llama los metodos al servicio
+//invocar al metodo editproduct traigo el producto edito y lo vuelvo a enviar
